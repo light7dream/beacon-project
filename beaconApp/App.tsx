@@ -5,9 +5,10 @@
  * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, { useState } from 'react';
+import type { PropsWithChildren } from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -19,29 +20,18 @@ import {
 
 import {
   Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import Scanner from './src/components/Scanner';
+import Aduit from './src/components/Aduit';
 
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
 
-function Section({children, title}: SectionProps): JSX.Element {
+function Section({ children, title }: SectionProps): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
       <Text
         style={[
           styles.sectionDescription,
@@ -49,19 +39,19 @@ function Section({children, title}: SectionProps): JSX.Element {
             color: isDarkMode ? Colors.light : Colors.dark,
           },
         ]}>
-        {children}
+          {title}
       </Text>
+      {children}
     </View>
   );
 }
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-
+  const [flag, setFlag] = useState(false);
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
@@ -71,25 +61,32 @@ function App(): JSX.Element {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
+          <Section title="Welcome to Beacon APP">
+            {!flag && (
+              <Scanner></Scanner>
+            )}
+            {flag && (
+              <Aduit></Aduit>
+            )}
           </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+          <View style={styles.buttonContainer}>
+            <Button
+              onPress={() => {
+                setFlag(false);
+              }}
+              disabled={!flag}
+              title="Register"
+            />
+            <Button
+              onPress={() => setFlag(true)}
+              disabled={flag}
+              title="Aduit Mode"
+            />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -98,8 +95,13 @@ function App(): JSX.Element {
 
 const styles = StyleSheet.create({
   sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+    height: 400,
+  },
+  buttonContainer : {
+    flex:1,
+    justifyContent:'center',
+    marginTop: 150,
+    padding:10
   },
   sectionTitle: {
     fontSize: 24,
@@ -107,8 +109,9 @@ const styles = StyleSheet.create({
   },
   sectionDescription: {
     marginTop: 8,
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: '400',
+    textAlign:'center'
   },
   highlight: {
     fontWeight: '700',
