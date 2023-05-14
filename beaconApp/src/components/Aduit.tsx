@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-// import type { PropsWithChildren } from 'react';
-
 import { StyleSheet, View, Text } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
-
+import { requestLocationPermission } from '../helper';
 const manager = new BleManager();
 
 type ListProps = {
@@ -28,14 +26,20 @@ function Aduit(): JSX.Element {
     
 
     const scanAndConnect = () => {
-        manager.startDeviceScan(null, null, (error, device) => {
-            if (error) {
-                // Handle error (scanning will be stopped automatically)
-                return console.log('device scanning result is ...', error)
+        const permission = requestLocationPermission().then((permission) => {
+            if(permission) {
+                console.log('permission is ',permission);
+                manager.startDeviceScan(null, null, (error, device) => {
+                    console.log('this api called');
+                    if (error) {
+                        // Handle error (scanning will be stopped automatically)
+                        return console.log('device scanning result is ...', error)
+                    }
+                    console.log('this is device instance',device);
+                    items.push(device);
+                    setDevices(items);
+                });
             }
-            console.debug(device);
-            items.push(device);
-            setDevices(items);
         });
     }
     useEffect(() => {
