@@ -1,3 +1,5 @@
-export const constant_one = "First Constant";
-export const constant_two = "Second Constant";
-export const constant_three = "Third Constant";
+import images from "./images";
+
+import { COLORS, SIZES, FONTS } from "./colors";
+
+export {  COLORS, SIZES, FONTS, images }
